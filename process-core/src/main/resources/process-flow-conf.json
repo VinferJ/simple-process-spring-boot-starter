@@ -1,0 +1,107 @@
+[
+  {
+    "plainNode": {
+      "pid": "N1"
+    }
+  },
+
+  {
+    "conditionNode": {
+      "pid": "C1",
+      "matchedNodes": [
+        {
+          "plainNode": {
+            "pid": "N2"
+          }
+        },
+
+        {
+          "plainNode": {
+            "pid": "N3"
+          }
+        },
+
+        {
+          "conditionNode": {
+            "pid": "C2",
+            "matchedNodes": [
+              {
+                "plainNode": {
+                  "pid": "N4"
+                }
+              },
+
+              {
+                "plainNode": {
+                  "pid": "N9"
+                }
+              }
+            ],
+            "unmatchedNodes": [
+              {
+                "plainNode": {
+                  "pid": "N8"
+                }
+              },
+
+              {
+                "plainNode": {
+                  "pid": "N9"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "unmatchedNodes": [
+        {
+          "plainNode": {
+            "pid": "N5"
+          }
+        },
+
+        {
+          "plainNode": {
+            "pid": "N6"
+          }
+        },
+
+        {
+          "conditionNode": {
+            "pid": "C3",
+            "matchedNodes": [
+              {
+                "plainNode": {
+                  "pid": "N7"
+                }
+              },
+
+              {
+                "plainNode": {
+                  "pid": "N8"
+                }
+              },
+
+              {
+                "plainNode": {
+                  "pid": "N9"
+                }
+              }
+            ],
+            "unmatchedNodes": [
+              {
+                "plainNode": {
+                  "pid": "N3"
+                }
+              },
+
+              {
+                "conditionNode": "$C2"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]
