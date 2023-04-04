@@ -1,6 +1,7 @@
 package me.vinfer.simpleprocess.core.factory;
 
 import java.util.Collection;
+import java.util.List;
 
 import me.vinfer.simpleprocess.core.ProcessChain;
 import me.vinfer.simpleprocess.core.ProcessNode;
@@ -16,9 +17,9 @@ import org.springframework.lang.Nullable;
 @SuppressWarnings({"rawtypes"})
 public class StatefulProcessChainFactory extends AbstractProcessChainFactory{
 
-    public StatefulProcessChainFactory(@Nullable ProcessNodeDecorator decorator,
+    public StatefulProcessChainFactory(@Nullable List<ProcessNodeDecorator> decorators,
                                        @Nullable Collection<ProcessNodeParser> parsers) {
-        super(decorator, parsers);
+        super(decorators, parsers);
     }
 
     public StatefulProcessChainFactory() {

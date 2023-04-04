@@ -30,7 +30,7 @@ public class SimpleProcessNode extends ProcessNodeAbstract implements ProcessNod
     }
 
     @Override
-    public void start() {
+    public void execute() {
         if (null == operation) {
             return;
         }

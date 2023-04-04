@@ -53,7 +53,7 @@ public class ProcessNodeLifecycleDecorator implements ProcessNodeDecorator{
         Runnable decorated = getDecorated(originalNode);
         return new ProcessNodeAbstract() {
             @Override
-            public void start() {
+            public void execute() {
                 decorated.run();
             }
         };
@@ -65,7 +65,7 @@ public class ProcessNodeLifecycleDecorator implements ProcessNodeDecorator{
                 for (ProcessNodeLifecycle callback : callbacks) {
                     beforeStart(callback, originalNode);
                 }
-                originalNode.start();
+                originalNode.execute();
                 for (ProcessNodeLifecycle callback : callbacks) {
                     onFinished(callback, originalNode);
                 }

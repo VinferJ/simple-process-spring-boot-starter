@@ -65,7 +65,7 @@ public abstract class AbstractStatefulProcessNode extends AbstractStatefulRunnab
     }
 
     @Override
-    public void start() {
+    public void execute() {
         run();
     }
 

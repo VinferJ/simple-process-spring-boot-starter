@@ -7,11 +7,11 @@ import org.springframework.core.Ordered;
  * @author vinfer
  * @date 2023-03-27 15:34
  */
-public interface ProcessNode extends Ordered {
+public interface ProcessNode extends FlowableProcess<ProcessNode> {
 
     ProcessNode EMPTY_NODE = new ProcessNode() {
         @Override
-        public void start() {}
+        public void execute() {}
 
         @Override
         public ProcessNode next() {return null;}
@@ -27,21 +27,9 @@ public interface ProcessNode extends Ordered {
         }
     };
 
-    void start();
-
-    ProcessNode next();
-
-    void setNext(ProcessNode node);
-
-    String getProcessId();
-
-    default String getDescription() {
-        return "";
-    }
-
-    @Override
-    default int getOrder() {
-        return Ordered.LOWEST_PRECEDENCE;
-    }
+    /**
+     * execute this node
+     */
+    void execute();
 
 }

@@ -48,9 +48,13 @@ public abstract class AbstractStatefulRunnable implements StatefulRunnable {
 
             boolean started = STATE.compareAndSet(this, STATE_CREATED, STATE_RUNNING);
             if (!started) {
-                // must resume the state
-                throw new IllegalStateException("Start failed, illegal state: ["+mappingState()+"]" + ", " +
-                        "you can resume the state if try to run again");
+                if (shouldThrowsWhenStartFailed(state)) {
+                    // must resume the state
+                    throw new IllegalStateException("Start failed, illegal state: ["+mappingState()+"]" + ", " +
+                            "you can resume the state if try to run again");
+                }else {
+                    return;
+                }
             }
 
             onRunning();
@@ -68,6 +72,20 @@ public abstract class AbstractStatefulRunnable implements StatefulRunnable {
             onExited(t);
             throw t;
         }
+    }
+
+    /**
+     * check if this node should throw a {@link IllegalStateException}
+     * when starts on the state which was not {@link #STATE_CREATED}.
+     *
+     * <p> this node will return if choose not to throw an exception
+     * when starts on the state which was not {@link #STATE_CREATED}.
+     *
+     * @param currentState      current state
+     * @return                  true if it should throw, or else false
+     */
+    protected boolean shouldThrowsWhenStartFailed(int currentState) {
+        return true;
     }
 
     /**

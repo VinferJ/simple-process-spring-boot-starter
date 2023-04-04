@@ -39,7 +39,7 @@ public class StatefulProcessChain extends AbstractStatefulProcessNode
         while (getCurrentRunNode() != null) {
             ProcessNode current = getCurrentRunNode();
             onCheckPoint(current);
-            current.start();
+            current.execute();
             setCurrentRunNode(current.next());
         }
 

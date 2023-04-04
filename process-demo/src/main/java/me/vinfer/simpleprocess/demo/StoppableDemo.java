@@ -1,4 +1,4 @@
-package me.vinfer.simpleprocess.core.demo;
+package me.vinfer.simpleprocess.demo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * @date 2023-03-27 15:32
  */
 @Component
-public class StoppableTask implements InitializingBean {
+public class StoppableDemo implements InitializingBean {
 
     private StatefulProcessChain statefulProcessChain;
 
@@ -71,14 +71,14 @@ public class StoppableTask implements InitializingBean {
         }
 
         AbstractProcessChainFactory chainFactory = new StatefulProcessChainFactory();
-        this.statefulProcessChain = chainFactory.createStatefulProcessChain("StoppableTaskChain", processNodes);
+        this.statefulProcessChain = chainFactory.createProcessChain("StoppableTaskChain", processNodes);
     }
 
     public void start() throws Throwable {
         if (statefulProcessChain.isRunning()) {
             statefulProcessChain.resume();
         }else {
-            statefulProcessChain.start();
+            statefulProcessChain.execute();
         }
     }
 

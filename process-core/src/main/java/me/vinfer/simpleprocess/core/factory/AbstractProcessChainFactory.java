@@ -7,10 +7,12 @@ import java.util.stream.Collectors;
 import cn.hutool.core.collection.CollectionUtil;
 import me.vinfer.simpleprocess.core.ProcessChain;
 import me.vinfer.simpleprocess.core.ProcessNode;
+import me.vinfer.simpleprocess.core.common.Component;
 import me.vinfer.simpleprocess.core.common.NodeConf;
 import me.vinfer.simpleprocess.core.decorator.ProcessNodeDecorator;
 import me.vinfer.simpleprocess.core.parse.ProcessNodeParser;
 import me.vinfer.simpleprocess.core.utils.ProcessChoreographer;
+import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.lang.Nullable;
 
 /**
@@ -19,15 +21,18 @@ import org.springframework.lang.Nullable;
  * @date 2023-03-31 15:20
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
-public abstract class AbstractProcessChainFactory {
+public abstract class AbstractProcessChainFactory implements Component {
 
-    private final ProcessNodeDecorator decorator;
+    private final List<ProcessNodeDecorator> decorators;
 
     private final Collection<ProcessNodeParser> parsers;
 
-    public AbstractProcessChainFactory(@Nullable ProcessNodeDecorator decorator,
+    public AbstractProcessChainFactory(@Nullable List<ProcessNodeDecorator> decorators,
                                        @Nullable Collection<ProcessNodeParser> parsers) {
-        this.decorator = decorator;
+        if (null != decorators) {
+            AnnotationAwareOrderComparator.sort(decorators);
+        }
+        this.decorators = decorators;
         this.parsers = parsers;
     }
 
@@ -35,33 +40,33 @@ public abstract class AbstractProcessChainFactory {
         this(null, null);
     }
 
-    public <T extends ProcessChain> T createStatefulProcessChain(String chainId, List<ProcessNode> processNodes) {
+    public <T extends ProcessChain> T createProcessChain(String chainId, List<ProcessNode> processNodes) {
         ProcessNode root = resolveRootNode(processNodes);
         return (T) createChain(chainId, root);
     }
 
-    public <T extends ProcessChain> T createStatefulProcessChain(String chainId,
-                                                           List<NodeConf> nodeConfList,
-                                                           List<ProcessNode> processNodes) {
+    public <T extends ProcessChain> T createProcessChain(String chainId,
+                                                         List<NodeConf> nodeConfList,
+                                                         List<ProcessNode> processNodes) {
         ProcessNode root = resolveRootNode(nodeConfList, processNodes);
         return (T) createChain(chainId, root);
     }
 
-    public <T extends ProcessChain, E> T parseStatefulProcessChain(String chainId, E confObject) {
+    public <T extends ProcessChain, E> T parseProcessChain(String chainId, E confObject) {
         if (CollectionUtil.isEmpty(parsers)) {
             throw new UnsupportedOperationException("inner parsers is empty");
         }
 
         for (ProcessNodeParser parser : parsers) {
             if (parser.supports(confObject)) {
-                return (T) parseStatefulProcessChain(chainId, confObject, parser);
+                return (T) parseProcessChain(chainId, confObject, parser);
             }
         }
 
         throw new IllegalArgumentException("no supported parser found");
     }
 
-    public <T extends ProcessChain, E> T parseStatefulProcessChain(String chainId, E confObject, ProcessNodeParser<E> parser) {
+    public <T extends ProcessChain, E> T parseProcessChain(String chainId, E confObject, ProcessNodeParser<E> parser) {
         ProcessNode processNode = parser.parse(confObject);
         return (T) createChain(chainId, processNode);
     }
@@ -80,13 +85,20 @@ public abstract class AbstractProcessChainFactory {
     protected abstract ProcessChain createChain(String chainId, ProcessNode rootNode);
 
     private List<ProcessNode> decorateNodeIfNecessary(List<ProcessNode> processNodes) {
-        if (null == decorator) {
+        if (CollectionUtil.isEmpty(decorators)) {
             return processNodes;
         }
 
-        return processNodes.stream()
-                .map(decorator::decorate)
-                .collect(Collectors.toList());
+        List<ProcessNode> decoratedNodes = processNodes;
+
+        // applied all decorators
+        for (ProcessNodeDecorator decorator : decorators) {
+            decoratedNodes = decoratedNodes.stream()
+                    .map(decorator::decorate)
+                    .collect(Collectors.toList());
+        }
+
+        return decoratedNodes;
     }
 
 }

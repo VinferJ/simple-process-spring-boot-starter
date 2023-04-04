@@ -5,6 +5,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * wrap many process nodes and choreograph them as a chain.
+ *
+ * <p> you can invoke {@link #execute()} to fire all node's execution.
+ *
  * @author vinfer
  * @date 2023-03-31 16:24
  */

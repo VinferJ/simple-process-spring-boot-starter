@@ -39,7 +39,7 @@ public interface ConditionProcessNode extends ProcessNode {
     boolean matchedCondition();
 
     @Override
-    default void start() {
+    default void execute() {
         ProcessNode execNode;
 
         if (matchedCondition()) {
@@ -50,7 +50,7 @@ public interface ConditionProcessNode extends ProcessNode {
 
         // keep the flow connecting
         setNext(execNode.next());
-        execNode.start();
+        execNode.execute();
     }
 
     ProcessNode getConditionMatchedNode();

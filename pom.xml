@@ -12,6 +12,7 @@
         <module>process-autoconfigure</module>
         <module>process-core</module>
         <module>process-approval-flow</module>
+        <module>process-demo</module>
     </modules>
 
     <parent>
